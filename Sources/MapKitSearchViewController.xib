@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MapKitSearchViewController" customModule="MapKitSearchView" customModuleProvider="target">
+            <connections>
+                <outlet property="close" destination="F68-l0-ZwQ" id="s9W-bf-c5T"/>
+                <outlet property="compassParent" destination="NJ3-Qi-RXx" id="7CR-6O-IhG"/>
+                <outlet property="mapView" destination="DqN-mY-i0f" id="UEj-tA-JfV"/>
+                <outlet property="nearMeParent" destination="ds2-p7-WoM" id="OJj-g9-Qgo"/>
+                <outlet property="searchBar" destination="aG0-ag-UPg" id="hqq-OM-M9b"/>
+                <outlet property="stackViewHeight" destination="LvQ-MP-Rru" id="RZv-58-m6r"/>
+                <outlet property="tabView" destination="Mlc-bN-VDF" id="hJ5-TU-SM5"/>
+                <outlet property="tableView" destination="csJ-4E-pgX" id="TiN-ob-9Ld"/>
+                <outlet property="view" destination="hMt-wj-4lk" id="8bh-lx-Qrb"/>
+            </connections>
+        </placeholder>
+        <view contentMode="scaleToFill" id="hMt-wj-4lk">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" showsCompass="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DqN-mY-i0f">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" red="0.62352941179999999" green="0.85490196080000003" blue="0.94901960780000005" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                </mapView>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mlc-bN-VDF" customClass="MapTabsView" customModule="MapKitSearchView" customModuleProvider="target">
+                    <rect key="frame" x="323" y="28" width="40" height="80.5"/>
+                    <subviews>
+                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JV3-qp-yeS">
+                            <rect key="frame" x="0.0" y="0.0" width="40" height="80.5"/>
+                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="gjY-MN-ZZB">
+                                <rect key="frame" x="0.0" y="0.0" width="40" height="80.5"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </view>
+                            <blurEffect style="light"/>
+                        </visualEffectView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="jjd-Fk-uhq">
+                            <rect key="frame" x="0.0" y="0.0" width="40" height="80.5"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F68-l0-ZwQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="40" id="CBf-K2-ciu"/>
+                                        <constraint firstAttribute="width" constant="40" id="bSu-cK-0mU"/>
+                                    </constraints>
+                                    <state key="normal" image="round_close_black_24pt"/>
+                                    <connections>
+                                        <action selector="closeDidTap" destination="-1" eventType="touchUpInside" id="f6F-Ue-hsZ"/>
+                                    </connections>
+                                </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0ce-MJ-rKs">
+                                    <rect key="frame" x="0.0" y="40" width="40" height="0.5"/>
+                                    <color key="backgroundColor" red="0.88627450980392153" green="0.88627450980392153" blue="0.88627450980392153" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="0.5" id="0Bb-wR-Tjt"/>
+                                    </constraints>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XXA-6T-6gk">
+                                    <rect key="frame" x="0.0" y="40.5" width="40" height="40"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ds2-p7-WoM">
+                                            <rect key="frame" x="8" y="8" width="24" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="KVl-nm-CwU"/>
+                                                <constraint firstAttribute="width" constant="24" id="nhg-iA-Ipy"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="ds2-p7-WoM" firstAttribute="centerY" secondItem="XXA-6T-6gk" secondAttribute="centerY" id="4K0-Ea-QkW"/>
+                                        <constraint firstAttribute="width" constant="40" id="Iiv-jk-nqU"/>
+                                        <constraint firstItem="ds2-p7-WoM" firstAttribute="centerX" secondItem="XXA-6T-6gk" secondAttribute="centerX" id="Vmh-Gu-2Hn"/>
+                                        <constraint firstAttribute="height" constant="40" id="gBf-JZ-g0L"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.96862745100000003" green="1" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="jjd-Fk-uhq" secondAttribute="bottom" id="6Ba-K2-qSn"/>
+                        <constraint firstItem="JV3-qp-yeS" firstAttribute="top" secondItem="Mlc-bN-VDF" secondAttribute="top" id="7XJ-4P-SID"/>
+                        <constraint firstItem="JV3-qp-yeS" firstAttribute="leading" secondItem="Mlc-bN-VDF" secondAttribute="leading" id="9BK-fz-3lt"/>
+                        <constraint firstAttribute="bottom" secondItem="JV3-qp-yeS" secondAttribute="bottom" id="9Z3-Qh-8cv"/>
+                        <constraint firstItem="jjd-Fk-uhq" firstAttribute="leading" secondItem="Mlc-bN-VDF" secondAttribute="leading" id="Z50-DO-Kqe"/>
+                        <constraint firstAttribute="trailing" secondItem="JV3-qp-yeS" secondAttribute="trailing" id="alQ-dE-sqP"/>
+                        <constraint firstAttribute="trailing" secondItem="jjd-Fk-uhq" secondAttribute="trailing" id="dpr-lH-lpe"/>
+                        <constraint firstAttribute="width" constant="40" id="nfE-JF-bRt"/>
+                        <constraint firstItem="jjd-Fk-uhq" firstAttribute="top" secondItem="Mlc-bN-VDF" secondAttribute="top" id="xgE-cX-CZS"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="n6W-Rr-FGE"/>
+                </view>
+                <view contentMode="scaleToFill" placeholderIntrinsicWidth="50" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="NJ3-Qi-RXx">
+                    <rect key="frame" x="327" y="116.5" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="2eF-zk-Rk2"/>
+                        <constraint firstAttribute="height" constant="40" id="v63-AS-xJ5"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="VW9-RN-dVH"/>
+                </view>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rsI-lH-A9o" customClass="BottomSheetShadowView" customModule="MapKitSearchView" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="607" width="375" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="esP-Id-HlN"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="O5Q-1x-H4c"/>
+                </view>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4cO-GH-3zc" customClass="BottomSheetView" customModule="MapKitSearchView" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="607" width="375" height="647"/>
+                    <subviews>
+                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="amx-xl-qTj">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qDI-c8-w18">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </view>
+                            <blurEffect style="light"/>
+                        </visualEffectView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CqD-Nn-piV">
+                            <rect key="frame" x="171.5" y="4" width="32" height="4"/>
+                            <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="32" id="nEV-7H-orz"/>
+                                <constraint firstAttribute="height" constant="4" id="ueK-DX-5Ia"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" red="0.96862745100000003" green="1" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="CqD-Nn-piV" firstAttribute="centerX" secondItem="4cO-GH-3zc" secondAttribute="centerX" id="Anc-e3-35I"/>
+                        <constraint firstAttribute="bottom" secondItem="amx-xl-qTj" secondAttribute="bottom" id="D6n-vT-Srq"/>
+                        <constraint firstItem="amx-xl-qTj" firstAttribute="leading" secondItem="4cO-GH-3zc" secondAttribute="leading" id="Slf-aW-CS9"/>
+                        <constraint firstItem="amx-xl-qTj" firstAttribute="top" secondItem="4cO-GH-3zc" secondAttribute="top" id="nfC-fF-kAm"/>
+                        <constraint firstItem="CqD-Nn-piV" firstAttribute="top" secondItem="4cO-GH-3zc" secondAttribute="top" constant="4" id="qDG-nx-V01"/>
+                        <constraint firstAttribute="trailing" secondItem="amx-xl-qTj" secondAttribute="trailing" id="sAv-pB-GOw"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="oM1-rX-o3c"/>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="nkB-yk-CYS">
+                    <rect key="frame" x="0.0" y="607" width="375" height="60"/>
+                    <subviews>
+                        <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for a place or an address" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aG0-ag-UPg">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="FSL-ga-YAg"/>
+                            </constraints>
+                            <textInputTraits key="textInputTraits"/>
+                        </searchBar>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="64" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="csJ-4E-pgX">
+                            <rect key="frame" x="0.0" y="60" width="375" height="0.0"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </tableView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="LvQ-MP-Rru"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="Lhb-iX-YqO"/>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="DqN-mY-i0f" secondAttribute="trailing" id="8tx-iC-wiu"/>
+                <constraint firstItem="4cO-GH-3zc" firstAttribute="leading" secondItem="hMt-wj-4lk" secondAttribute="leading" id="Bwa-jH-jkn"/>
+                <constraint firstItem="NJ3-Qi-RXx" firstAttribute="trailing" secondItem="Mlc-bN-VDF" secondAttribute="trailing" constant="4" id="CB9-3T-pkJ"/>
+                <constraint firstItem="NJ3-Qi-RXx" firstAttribute="top" secondItem="Mlc-bN-VDF" secondAttribute="bottom" constant="8" id="E0x-vL-1Lc"/>
+                <constraint firstItem="rsI-lH-A9o" firstAttribute="top" secondItem="4cO-GH-3zc" secondAttribute="top" id="HfB-fU-4ao"/>
+                <constraint firstItem="DqN-mY-i0f" firstAttribute="top" secondItem="hMt-wj-4lk" secondAttribute="top" id="KO2-ww-SMA"/>
+                <constraint firstItem="4cO-GH-3zc" firstAttribute="top" secondItem="nkB-yk-CYS" secondAttribute="top" id="QkR-RR-6Fp"/>
+                <constraint firstItem="nkB-yk-CYS" firstAttribute="leading" secondItem="rkm-KU-cZt" secondAttribute="leading" id="Vaw-Q8-akL"/>
+                <constraint firstItem="Mlc-bN-VDF" firstAttribute="top" secondItem="rkm-KU-cZt" secondAttribute="top" constant="8" id="bT5-Sv-taL"/>
+                <constraint firstItem="rkm-KU-cZt" firstAttribute="bottom" secondItem="nkB-yk-CYS" secondAttribute="bottom" id="cek-Uu-tma"/>
+                <constraint firstItem="rsI-lH-A9o" firstAttribute="leading" secondItem="rkm-KU-cZt" secondAttribute="leading" id="eaV-Ng-TDq"/>
+                <constraint firstItem="DqN-mY-i0f" firstAttribute="leading" secondItem="hMt-wj-4lk" secondAttribute="leading" id="gTC-Vd-CF9"/>
+                <constraint firstItem="rkm-KU-cZt" firstAttribute="trailing" secondItem="Mlc-bN-VDF" secondAttribute="trailing" constant="12" id="hEX-jj-Udb"/>
+                <constraint firstItem="rsI-lH-A9o" firstAttribute="trailing" secondItem="rkm-KU-cZt" secondAttribute="trailing" id="iQm-ah-VSr"/>
+                <constraint firstAttribute="bottom" secondItem="DqN-mY-i0f" secondAttribute="bottom" id="ndp-Jx-Bzr"/>
+                <constraint firstItem="4cO-GH-3zc" firstAttribute="height" secondItem="rkm-KU-cZt" secondAttribute="height" id="pV7-q8-CNN"/>
+                <constraint firstItem="nkB-yk-CYS" firstAttribute="trailing" secondItem="rkm-KU-cZt" secondAttribute="trailing" id="rxt-2H-Wjy"/>
+                <constraint firstAttribute="trailing" secondItem="4cO-GH-3zc" secondAttribute="trailing" id="sfe-iz-XAH"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="rkm-KU-cZt"/>
+            <point key="canvasLocation" x="206" y="144"/>
+        </view>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+    </objects>
+    <resources>
+        <image name="round_close_black_24pt" width="48" height="48"/>
+    </resources>
+</document>
