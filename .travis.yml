@@ -8,8 +8,8 @@ env:
     - PROJECT=MapKitSearchView.xcodeproj
     - IOS_FRAMEWORK_SCHEME="MapKitSearchView"
   matrix:
-    - DESTINATION="OS=12.1,name=iPhone XR" SCHEME="$IOS_FRAMEWORK_SCHEME" RUN_TESTS="YES"
-    - DESTINATION="OS=11.4,name=iPhone X" SCHEME="$IOS_FRAMEWORK_SCHEME" RUN_TESTS="YES"
+    - DESTINATION="OS=12.1,name=iPhone XR" SCHEME="$IOS_FRAMEWORK_SCHEME"
+    - DESTINATION="OS=11.4,name=iPhone X" SCHEME="$IOS_FRAMEWORK_SCHEME"
 
 script:
   - set -o pipefail
@@ -21,9 +21,4 @@ script:
       xcodebuild -project "$PROJECT" -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES test | xcpretty;
     else
       xcodebuild -project "$PROJECT" -scheme "$SCHEME" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO build | xcpretty;
-    fi
-
-  # Run `pod lib lint` if specified
-  - if [ $POD_LINT == "YES" ]; then
-      pod lib lint;
     fi
