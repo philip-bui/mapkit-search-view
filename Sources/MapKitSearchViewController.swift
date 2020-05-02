@@ -33,17 +33,21 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
     @IBOutlet private var stackViewHeight: NSLayoutConstraint!
     // Stack view height if expanded.
     private var stackViewExpandedHeight: CGFloat?
-    // Maximum height stack view can be dragged.
-    private var stackViewMaxDraggableHeight: CGFloat {
-        return view.frame.height - 120
-    }
-    // Maximum height for expanded stack view.
+    
+    ///This ratio controls how large the expanded stack can be relative to the height of the view.  A value of >= 1.0 will consume the entire height. A value of 0.5 is
+    ///half the height, a value of 0 will not take up any height (except allowing for the search bar and keyboard).  The default is 0.45, just slightly less than half to show the
+    ///current position marker.  Note: the expanded height can grow when scrolling through the list.
+    public var expandedRatio : CGFloat = 0.45
+    
+    // Maximum height for expanded stack view (when scrolling the list)
     private var stackViewMaxExpandedHeight: CGFloat {
-        return view.frame.height - 180
+        return view.frame.height - 160
     }
     // Maximum height for stack view when navigating map.
     private var stackViewMaxMapInteractedHeight: CGFloat {
-        return max((view.frame.height - 180) / 3, searchBarHeight)
+        
+        let ratio = min(expandedRatio, 1.0)
+        return max((view.frame.height) * ratio, searchBarHeight)
     }
     // Initial table view y offset when beginning pan.
     private var tableViewPanInitialOffset: CGFloat?
@@ -114,7 +118,8 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
     
     private let locationManager = CLLocationManager()
     
-    open var delegate: MapKitSearchDelegate!
+    open var delegate: MapKitSearchDelegate?
+    
     open var tintColor: UIColor? {
         didSet {
             guard tintColor != oldValue else {
@@ -159,7 +164,7 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
     open var userLocationRequest: CLAuthorizationStatus?
     open var alertSubtitle: String?
     
-    convenience public init(delegate: MapKitSearchDelegate) {
+    convenience public init(delegate: MapKitSearchDelegate?) {
         self.init(nibName: "MapKitSearchViewController", bundle: Bundle(for: MapKitSearchViewController.self))
         self.delegate = delegate
     }
@@ -301,16 +306,10 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
         guard let originalPlacemark = placemarks?.first, let placemark = originalPlacemark.mkPlacemark else {
             return
         }
-        mapKitSearch(didChoose: originalPlacemark.areasOfInterest?.first ?? originalPlacemark.name ?? originalPlacemark.address, mapItem: MKMapItem(placemark: placemark))
-    }
-    
-    private func mapKitSearch(didChoose title: String, mapItem: MKMapItem, cancelHandler: ((UIAlertAction) -> Void)? = nil) {
-        let alert = UIAlertController(title: title, message: alertSubtitle, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: cancelHandler))
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-            self.delegate.mapKitSearch(self, mapItem: mapItem)
-        })
-        present(alert, animated: true)
+        let mapItem = MKMapItem(placemark: placemark)
+           
+        delegate?.mapKitSearch(self, mapItem: mapItem)
+        delegate?.mapKitSearch(userSelectedGeocodeItem: mapItem, on: self)
     }
     
     private func geocodeRequestCancel() {
@@ -338,9 +337,9 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
                 // Drag up. Can't drag above stackViewMaxDraggableHeight
                 if let stackViewExpandedHeight = stackViewExpandedHeight, isExpanded {
                     // stackViewExpandedHeight always contains keyboardHeight
-                    stackViewHeight.constant = min(stackViewMaxDraggableHeight, stackViewExpandedHeight - translationY)
+                    stackViewHeight.constant = min(stackViewMaxExpandedHeight, stackViewExpandedHeight - translationY)
                 } else {
-                    stackViewHeight.constant = min(stackViewMaxDraggableHeight, searchBarHeight + keyboardHeight - translationY)
+                    stackViewHeight.constant = min(stackViewMaxExpandedHeight, searchBarHeight + keyboardHeight - translationY)
                 }
             }
             break
@@ -371,9 +370,11 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
             }
             let stackViewTranslation = tableViewPanInitialOffset - translationY
             tableView.contentOffset.y = max(0, stackViewTranslation)
-            if stackViewTranslation < 0, let stackViewExpandedHeight = stackViewExpandedHeight {
-                stackViewHeight.constant = max(searchBarHeight, stackViewExpandedHeight + stackViewTranslation)
-            }
+            
+            //Removed this code because scroll down in the table view hides the table when hitting the top, undesired behavior
+            //if stackViewTranslation < 0, let stackViewExpandedHeight = stackViewExpandedHeight {
+            //    stackViewHeight.constant = max(searchBarHeight, stackViewExpandedHeight + stackViewTranslation)
+            //}
         }
     }
     
@@ -473,7 +474,7 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
         } else { // Remove annotations, and resize mapView to new annotations.
             tableViewShow()
             mapAnnotations.removeAll()
-            mapView.removeAnnotations(mapView.annotations)
+            mapView.removeAnnotations(mapView.annotations)  //remove all annotations from map
             var annotations = [PlaceAnnotation]()
             for mapItem in response.mapItems {
                 mapAnnotations.insert(mapItem.placemark)
@@ -481,7 +482,9 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
             }
             // 1 Search Result. Refer to delegate.
             if response.mapItems.count == 1, let mapItem = response.mapItems.first {
-                delegate.mapKitSearch(self, mapItem: mapItem)
+                delegate?.mapKitSearch(self, mapItem: mapItem)
+                delegate?.mapKitSearch(searchReturnedOneItem: mapItem, on: self)
+
             }
             mapView.showAnnotations(annotations, animated: true)
             if dismissKeyboard {
@@ -583,15 +586,47 @@ extension MapKitSearchViewController: MKMapViewDelegate {
         }
     }
     
-    public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        geocodeRequestCancel()
-        guard let annotation = view.annotation as? PlaceAnnotation, let title = annotation.title else {
-            return
+    //Locates the PlaceAnnotation from an item on the map
+    private func findPlaceAnnotation(from mapItem: MKMapItem) -> PlaceAnnotation? {
+        for annotation in mapView.annotations {
+            if let placeAnnotation = annotation as? PlaceAnnotation {
+                if placeAnnotation.mapItem == mapItem {
+                    return placeAnnotation
+                }
+            }
         }
-        mapKitSearch(didChoose: title, mapItem: annotation.mapItem) { _ in
-            self.mapView.deselectAnnotation(annotation, animated: true)
+        return nil
+    }
+    
+    public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+    
+        geocodeRequestCancel()
+        
+        //If pressed on one of the annotation, let the delegate know
+        if let annotation = view.annotation as? PlaceAnnotation {
+            
+            delegate?.mapKitSearch(userSelectedAnnotationFromMap: annotation.mapItem, on: self)
         }
     }
+    
+
+    private func centerAndZoomMapOnLocation(_ location: CLLocationCoordinate2D) {
+
+        let coordinateRegion = MKCoordinateRegion(center: location,
+                                                  latitudinalMeters: 1000,
+                                                  longitudinalMeters: 1000)
+        
+        mapView.setRegion(coordinateRegion, animated: true)
+    }
+    
+    ///Deselect all annotations on map
+    public func deselectAnnotations() {
+        for annotation in mapView.selectedAnnotations {
+            mapView.deselectAnnotation(annotation, animated: true)
+        }
+    }
+    
+    
 }
 
 // MARK: - Search Delegate
@@ -676,7 +711,16 @@ extension MapKitSearchViewController: UITableViewDelegate {
             guard searchMapItems.count > indexPath.row else {
                 return
             }
-            delegate.mapKitSearch(self, mapItem: searchMapItems[indexPath.row])
+            let selectedMapItem = searchMapItems[indexPath.row]
+            
+            //Find the annotation on the map from the selected table entry, zoom to it, hide the table, and let delegate know
+            if let placeAnnotation = findPlaceAnnotation(from: selectedMapItem) {
+                centerAndZoomMapOnLocation(placeAnnotation.coordinate)
+                tableViewHide()
+                delegate?.mapKitSearch(self, mapItem: selectedMapItem)
+                delegate?.mapKitSearch(userSelectedListItem: selectedMapItem, on: self)
+            }
+        
             break
         }
     }
@@ -739,11 +783,32 @@ extension MapKitSearchViewController: CLLocationManagerDelegate {
         mapView.setCenter(location.coordinate, animated: true)
         manager.stopUpdatingLocation()
     }
+    
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
+    
 }
 
 // MARK: - Protocol
 public protocol MapKitSearchDelegate {
+    
+    @available(*, deprecated, message: "Other protocol functions provide finer detail on user action")
     func mapKitSearch(_ mapKitSearchViewController: MapKitSearchViewController, mapItem: MKMapItem)
+
+    ///Called on the delegate when the search results returned exactly one matching item
+    func mapKitSearch(searchReturnedOneItem mapItem: MKMapItem, on mapKitSearchViewController: MapKitSearchViewController)
+    
+    ///Called on the delegate when the user taps on one of the items on the list
+    func mapKitSearch(userSelectedListItem mapItem: MKMapItem, on mapKitSearchViewController: MapKitSearchViewController)
+    
+    ///Called on the delegate when the user taps on the map, and the geocode returns a matching entry
+    func mapKitSearch(userSelectedGeocodeItem mapItem: MKMapItem, on mapKitSearchViewController: MapKitSearchViewController)
+
+    ///Called on the delegate when the user selects an annotation on the map that was added to the map by the search.
+    func mapKitSearch(userSelectedAnnotationFromMap mapItem: MKMapItem, on mapKitSearchViewController: MapKitSearchViewController)
+
+    
 }
 
 // MARK: - MKAnnotation
@@ -758,4 +823,13 @@ class PlaceAnnotation: NSObject, MKAnnotation {
         title = mapItem.name
         subtitle = nil
     }
+}
+
+
+extension CLLocationCoordinate2D: Equatable {
+
+    static public func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        return (lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude)
+    }
+    
 }
