@@ -309,7 +309,7 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
         let mapItem = MKMapItem(placemark: placemark)
            
         delegate?.mapKitSearch(self, mapItem: mapItem)
-        delegate?.mapKitSearch(userSelectedGeocodeItem: mapItem, on: self)
+        delegate?.mapKitSearch(self, userSelectedGeocodeItem: mapItem)
     }
     
     private func geocodeRequestCancel() {
@@ -483,7 +483,7 @@ public class MapKitSearchViewController: UIViewController, UIGestureRecognizerDe
             // 1 Search Result. Refer to delegate.
             if response.mapItems.count == 1, let mapItem = response.mapItems.first {
                 delegate?.mapKitSearch(self, mapItem: mapItem)
-                delegate?.mapKitSearch(searchReturnedOneItem: mapItem, on: self)
+                delegate?.mapKitSearch(self, searchReturnedOneItem: mapItem)
 
             }
             mapView.showAnnotations(annotations, animated: true)
@@ -605,7 +605,7 @@ extension MapKitSearchViewController: MKMapViewDelegate {
         //If pressed on one of the annotation, let the delegate know
         if let annotation = view.annotation as? PlaceAnnotation {
             
-            delegate?.mapKitSearch(userSelectedAnnotationFromMap: annotation.mapItem, on: self)
+            delegate?.mapKitSearch(self, userSelectedAnnotationFromMap: annotation.mapItem)
         }
     }
     
@@ -718,7 +718,7 @@ extension MapKitSearchViewController: UITableViewDelegate {
                 centerAndZoomMapOnLocation(placeAnnotation.coordinate)
                 tableViewHide()
                 delegate?.mapKitSearch(self, mapItem: selectedMapItem)
-                delegate?.mapKitSearch(userSelectedListItem: selectedMapItem, on: self)
+                delegate?.mapKitSearch(self, userSelectedListItem: selectedMapItem)
             }
         
             break
@@ -797,16 +797,16 @@ public protocol MapKitSearchDelegate {
     func mapKitSearch(_ mapKitSearchViewController: MapKitSearchViewController, mapItem: MKMapItem)
 
     ///Called on the delegate when the search results returned exactly one matching item
-    func mapKitSearch(searchReturnedOneItem mapItem: MKMapItem, on mapKitSearchViewController: MapKitSearchViewController)
+    func mapKitSearch(_ mapKitSearchViewController: MapKitSearchViewController, searchReturnedOneItem mapItem: MKMapItem)
     
     ///Called on the delegate when the user taps on one of the items on the list
-    func mapKitSearch(userSelectedListItem mapItem: MKMapItem, on mapKitSearchViewController: MapKitSearchViewController)
+    func mapKitSearch(_ mapKitSearchViewController: MapKitSearchViewController, userSelectedListItem mapItem: MKMapItem)
     
     ///Called on the delegate when the user taps on the map, and the geocode returns a matching entry
-    func mapKitSearch(userSelectedGeocodeItem mapItem: MKMapItem, on mapKitSearchViewController: MapKitSearchViewController)
+    func mapKitSearch(_ mapKitSearchViewController: MapKitSearchViewController, userSelectedGeocodeItem mapItem: MKMapItem)
 
     ///Called on the delegate when the user selects an annotation on the map that was added to the map by the search.
-    func mapKitSearch(userSelectedAnnotationFromMap mapItem: MKMapItem, on mapKitSearchViewController: MapKitSearchViewController)
+    func mapKitSearch(_ mapKitSearchViewController: MapKitSearchViewController, userSelectedAnnotationFromMap mapItem: MKMapItem)
 
     
 }
@@ -825,11 +825,3 @@ class PlaceAnnotation: NSObject, MKAnnotation {
     }
 }
 
-
-extension CLLocationCoordinate2D: Equatable {
-
-    static public func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-        return (lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude)
-    }
-    
-}
