@@ -8,9 +8,10 @@ env:
     - PROJECT=MapKitSearchView.xcodeproj
     - IOS_FRAMEWORK_SCHEME="MapKitSearchView"
   matrix:
-    - DESTINATION="OS=12.1,name=iPhone XR" SCHEME="$IOS_FRAMEWORK_SCHEME"
+    - DESTINATION="OS=12.4,name=iPhone Xʀ" SCHEME="$IOS_FRAMEWORK_SCHEME"
     - DESTINATION="OS=11.4,name=iPhone X" SCHEME="$IOS_FRAMEWORK_SCHEME"
-
+    - DESTINATION="OS=11.0.1,name=iPhone 5s" SCHEME="$IOS_FRAMEWORK_SCHEME"
+    
 script:
   - set -o pipefail
   - xcodebuild -version
